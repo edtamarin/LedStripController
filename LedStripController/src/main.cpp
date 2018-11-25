@@ -15,7 +15,7 @@ void setRGB(int r,int g, int b);
 
 // pin definitions
 int dimmer = A0;
-int PWM_Color[3] = {D0,D1,D2};
+int PWM_Color[3] = {D1,D2,D3};
 int colorValues[3] = {0,0,0};
 int brightnessScaler = 0;
 
@@ -29,20 +29,26 @@ void setup() {
 void loop() {
   // pot value determines brightness
   brightnessScaler = getDimmerValue();
-  setRGB(255,0,0);
+  //setRGB(255,0,0);
+  analogWrite(D1,255);
+  analogWrite(D2,0);
+  analogWrite(D3,0);
   Serial.println("Red");
   delay(100);
+  /*
   setRGB(0,255,0);
   Serial.println("Green");
   delay(100); 
   setRGB(0,0,255);
   Serial.println("Blue");
   delay(100); 
+  */
 }
 
 // get the value from the potentiometer'
 int getDimmerValue(){
   int dimmerVal = analogRead(dimmer);
+  Serial.println(dimmerVal);
   return dimmerVal;
 }
 
@@ -50,9 +56,9 @@ int getDimmerValue(){
 // and global brightness setting
 int scaleColor(int intensity){
   // scale 8-bit color input to PWM range
-  int scaledColor = map(intensity,0,255,0,1024);
+  //int scaledColor = map(intensity,0,255,0,1024);
   // globally scale the value with the dimmer
-  int bnessScaledColor = scaledColor * brightnessScaler/1023;
+  int bnessScaledColor = intensity * brightnessScaler/1024;
   return bnessScaledColor;
 }
 
@@ -66,7 +72,7 @@ void setColor(int type, int intensity){
 
 // set all three colors at the same time
 void setRGB(int r,int g, int b){
-  setColor(1,r);
-  setColor(2,g);
-  setColor(3,b);
+  setColor(0,r);
+  setColor(1,g);
+  setColor(2,b);
 }
